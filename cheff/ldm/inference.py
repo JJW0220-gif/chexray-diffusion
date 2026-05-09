@@ -1,5 +1,6 @@
 """Functions and classes for loading and handling models conveniently."""
 import contextlib
+import io
 from typing import Union, Dict, Optional
 
 import torch
@@ -18,7 +19,7 @@ class CheffAEModel:
     ) -> None:
         self.device = device
 
-        with contextlib.redirect_stdout(None):
+        with contextlib.redirect_stdout(io.StringIO()):
             self.model = AutoencoderKL(
                 embed_dim=3,
                 ckpt_path=model_path,
@@ -56,7 +57,7 @@ class CheffLDM:
             device: Union[str, int, torch.device] = 'cuda'
     ) -> None:
         self.device = device
-        with contextlib.redirect_stdout(None):
+        with contextlib.redirect_stdout(io.StringIO()):
             self.model = self._init_checkpoint(model_path, ae_path)
 
         self.model = self.model.to(self.device)
